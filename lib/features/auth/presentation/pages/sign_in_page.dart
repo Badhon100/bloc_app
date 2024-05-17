@@ -1,7 +1,9 @@
 import 'package:bloc_app/core/theme/app_pallete.dart';
+import 'package:bloc_app/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:bloc_app/features/auth/presentation/widgets/auth_field.dart';
 import 'package:bloc_app/features/auth/presentation/widgets/auth_gradient_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -61,21 +63,29 @@ class _SignInPageState extends State<SignInPage> {
               const SizedBox(
                 height: 20,
               ),
-              RichText(
-                text: TextSpan(
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignUpPage(),
+                    ),
+                  );
+                },
+                child: RichText(
+                  text: TextSpan(
                     text: "Dont'n have an account?",
                     style: Theme.of(context).textTheme.titleMedium,
                     children: [
                       TextSpan(
                         text: " Sign up",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(
-                                color: AppPallete.gradient2,
-                                fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: AppPallete.gradient2,
+                            fontWeight: FontWeight.bold),
                       ),
-                    ]),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
