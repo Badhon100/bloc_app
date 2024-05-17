@@ -55,7 +55,7 @@ class _SignInPageState extends State<SignInPage> {
                 height: 20,
               ),
               AuthGgadientButton(
-                name: "Sign up",
+                name: "Sign in",
                 onPressed: () {},
               ),
               const SizedBox(
