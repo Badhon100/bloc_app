@@ -6,13 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_bloc_event.dart';
 part 'auth_bloc_state.dart';
 
-class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUp _userSignUp;
   AuthBloc({
     required UserSignUp userSignUp,
   })  : _userSignUp = userSignUp,
-        super(AuthBlocInitial()) {
+        super(AuthInitial()) {
     on<AuthSignUp>((event, emit) async {
+      emit(AuthLoading());
       final res = await _userSignUp(
         UserSignUpParams(
           email: event.email,
@@ -20,7 +21,8 @@ class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
           name: event.name,
         ),
       );
-      res.fold((l) => emit(AuthFailure(message: l.message)), (user) => emit(AuthSuccess(uid: user)));
+      res.fold((l) => emit(AuthFailure(message: l.message)),
+          (user) => emit(AuthSuccess(uid: user)));
     });
   }
 }

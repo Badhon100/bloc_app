@@ -1,9 +1,9 @@
 part of 'auth_bloc.dart';
 
 @immutable
-sealed class AuthBlocEvent {}
+sealed class AuthEvent {}
 
-final class AuthSignUp extends AuthBlocEvent {
+final class AuthSignUp extends AuthEvent {
   final String email;
   final String password;
   final String name;
