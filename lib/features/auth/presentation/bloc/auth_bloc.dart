@@ -1,3 +1,4 @@
+import 'package:bloc_app/features/auth/domain/entities/user.dart';
 import 'package:bloc_app/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'auth_bloc_event.dart';
 part 'auth_bloc_state.dart';
 
-class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
+class AuthBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   final UserSignUp _userSignUp;
-  AuthBlocBloc({
+  AuthBloc({
     required UserSignUp userSignUp,
   })  : _userSignUp = userSignUp,
         super(AuthBlocInitial()) {
@@ -19,7 +20,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
           name: event.name,
         ),
       );
-      res.fold((l) => emit(AuthFailure(message: l.message)), (r) => emit(AuthSuccess(uid: r)));
+      res.fold((l) => emit(AuthFailure(message: l.message)), (user) => emit(AuthSuccess(uid: user)));
     });
   }
 }

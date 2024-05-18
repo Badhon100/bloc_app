@@ -1,4 +1,4 @@
-part of 'auth_bloc_bloc.dart';
+part of 'auth_bloc.dart';
 
 @immutable
 sealed class AuthBlocState {}
@@ -8,7 +8,7 @@ final class AuthBlocInitial extends AuthBlocState {}
 final class AuthLoading extends AuthBlocState {}
 
 final class AuthSuccess extends AuthBlocState {
-  final String uid;
+  final User uid;
 
   AuthSuccess({required this.uid});
 }

@@ -1,14 +1,15 @@
 import 'package:bloc_app/core/theme/error/exception.dart';
+import 'package:bloc_app/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<String> signUpWithEmailPassword({
+  Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
     required String password,
   });
 
-  Future<String> signInWithEmailPassword({
+  Future<UserModel> signInWithEmailPassword({
     required String email,
     required String password,
   });
@@ -23,12 +24,12 @@ class AuthRemoteDataSourceIml implements AuthRemoteDataSource {
   
   
   @override
-  Future<String> signInWithEmailPassword({required String email, required String password}) {
+  Future<UserModel> signInWithEmailPassword({required String email, required String password}) {
     throw UnimplementedError();
   }
   
   @override
-  Future<String> signUpWithEmailPassword({required String name, required String email, required String password}) 
+  Future<UserModel> signUpWithEmailPassword({required String name, required String email, required String password}) 
     async {
     try {
       final respnse = await supabaseClient.auth
@@ -36,7 +37,7 @@ class AuthRemoteDataSourceIml implements AuthRemoteDataSource {
       if (respnse.user == null) {
         throw const ServerException("User is null");
       }
-      return respnse.user!.id;
+      return UserModel.fromJson(respnse.user!.toJson());
     } catch (e) {
       throw ServerException(e.toString());
     }
