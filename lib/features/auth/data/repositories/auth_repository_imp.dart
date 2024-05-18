@@ -37,10 +37,22 @@ class AuthRepositoryImp implements AuthRepository {
     try {
       final user = await fn();
       return right(user);
-    } on sb.AuthException catch (e){
+    } on sb.AuthException catch (e) {
       return left(Failure(message: e.message));
-    } 
-    on ServerException catch (e) {
+    } on ServerException catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> currentUser() async {
+    try {
+      final user = await remoteDataSource.getCurrentUserData();
+      if (user == null) {
+        return left(Failure(message: "User not logged in"));
+      }
+      return right(user);
+    } on ServerException catch (e) {
       return left(Failure(message: e.message));
     }
   }

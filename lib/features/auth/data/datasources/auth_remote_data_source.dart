@@ -3,6 +3,7 @@ import 'package:bloc_app/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
+  Session? get currentUserSession;
   Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
@@ -13,18 +14,21 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+
+  Future<UserModel?> getCurrentUserData();
 }
 
 class AuthRemoteDataSourceIml implements AuthRemoteDataSource {
   final SupabaseClient supabaseClient;
 
   AuthRemoteDataSourceIml({required this.supabaseClient});
- 
 
-  
-  
   @override
-  Future<UserModel> signInWithEmailPassword({required String email, required String password}) async{
+  Session? get currentUserSession => supabaseClient.auth.currentSession;
+
+  @override
+  Future<UserModel> signInWithEmailPassword(
+      {required String email, required String password}) async {
     try {
       final respnse = await supabaseClient.auth
           .signInWithPassword(password: password, email: email);
@@ -36,10 +40,12 @@ class AuthRemoteDataSourceIml implements AuthRemoteDataSource {
       throw ServerException(e.toString());
     }
   }
-  
+
   @override
-  Future<UserModel> signUpWithEmailPassword({required String name, required String email, required String password}) 
-    async {
+  Future<UserModel> signUpWithEmailPassword(
+      {required String name,
+      required String email,
+      required String password}) async {
     try {
       final respnse = await supabaseClient.auth
           .signUp(password: password, email: email, data: {'name': name});
@@ -50,6 +56,21 @@ class AuthRemoteDataSourceIml implements AuthRemoteDataSource {
     } catch (e) {
       throw ServerException(e.toString());
     }
-  
+  }
+
+  @override
+  Future<UserModel?> getCurrentUserData() async {
+    try {
+      if (currentUserSession != null) {
+        final userData = await supabaseClient
+            .from('profiles')
+            .select()
+            .eq('id', currentUserSession!.user.id);
+        return UserModel.fromJson(userData.first);
+      }
+      return null;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 }
